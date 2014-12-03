@@ -55,15 +55,14 @@ function debugPre ($a,$num){
 }
 /**
 * @param userCache 用户信息缓存
-* @param $nickname 用户昵称，文件名
+* @param $p 用户昵称，文件名
 * @param $data 封装的数据
 */
 //定时缓存
-function userCache($nickname, $data){
+function userCache($p, $data){
 
     $file = new File();
-    $n = "user_".$nickname;
-    $file->cacheData($n, $data);
+    $file->cacheData($p, $data);
 }
 
 /**
@@ -73,17 +72,43 @@ function userCache($nickname, $data){
 //读取缓存
 function getUserCache($fileName){
     
-    $cacheFile = "user_".$fileName;
+
     $cacheDir = "./cache/";
 
     if(isset($fileName)){
 
-        return $cacheDataJson = file_get_contents($cacheDir.$cacheFile.".json");
+        return $cacheDataJson = file_get_contents($cacheDir.$fileName.".json");
 
     }else{
         //echo "警告：您的操作未授权，请登录！";
         newHeader('index.php');
 
+    }
+}
+
+/**
+* @param backCode 提示信息
+* @param $code back参数
+*/
+//读取缓存
+function backCode($code){
+    
+    switch ($code) {
+        case 'warning':
+            return '禁止操作！请先登陆！';
+            break;
+
+        case 'home':
+            return '扫描登录后可以查看个人首页，报名信息';
+            break;
+
+        case 'main':
+            return '请先登陆！';
+            break;
+
+        default:
+            return '';
+            break;
     }
 }
 

@@ -11,6 +11,9 @@ class File{
     }
 
     public function cacheData($key, $value = '', $path = ''){
+        //解决中文乱码问题
+        $key = iconv('UTF-8', 'GBK', $key);
+
         $filename = $this->_dir .$path .$key .self::EXT;
 
         if ($value !=='') {//将value值写入缓存

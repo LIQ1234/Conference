@@ -5,14 +5,18 @@
 * @author High Sea <admin@highsea90.com>
 */
 session_start();
+include_once 'include/common.php';
+$_SESSION['nickname'] = '';
 $_SESSION["access_token"] = "none";
 $_SESSION["refresh_token"] = 'none';
 $_SESSION["scope"] = 'none';
 $_SESSION["openid"] = 'none';
 $_SESSION["code"] = '';
 $_SESSION["state"] = '';
-?>
 
+$backcode = isset($_GET['back']) ? $_GET['back'] : '';
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,12 +26,14 @@ $_SESSION["state"] = '';
 
 </head>
 <body>
+<?php
+if (!$backcode=='') {
+    echo '<h1>'.backCode($backcode).'</h1>';
+}
+?>
+
 <h1>微信二维码登陆</h1>
 <div id="login_container"></div>
-<p><?=('http://idacker.com/weixinsdk/index.php')?></p>
-    
-
-
 
 <script type="text/javascript">
 var obj = new WxLogin({

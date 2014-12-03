@@ -3,6 +3,10 @@
 * PHP for wechat (using OAuth2)
 *
 * @author High Sea <admin@highsea90.com>
+*
+* main 页面 获得 access_token refresh_token userinfo cacheData
+*
+*【注：该页面url包含了 code 等敏感信息】
 */
 session_start();
 require_once('./file/file.php');//文件夹操作
@@ -27,7 +31,7 @@ if ($code!=''&&$state===md5('idacker')) {
 
 }else{
 
-    newHeader('index.php');
+    newHeader('index.php?back=warning');
     //确保重定向后，后续代码不会被执行 
     die();
 }
@@ -93,7 +97,7 @@ if ($verify_API['errmsg']==='ok') {
             'unionid'    => $user_API['unionid']
         );
 
-        userCache($user_API['nickname'], $resultCacheDataJson);
+        userCache("user_".$user_API['nickname'], $resultCacheDataJson);
         newHeader('home.php');
 
     }else{
@@ -105,7 +109,7 @@ if ($verify_API['errmsg']==='ok') {
     // access_token 过期
     //
     //debugPre($verify_API, 1);
-    newHeader('index.php');
+    newHeader('index.php?back=main');
     die();
 }
 
