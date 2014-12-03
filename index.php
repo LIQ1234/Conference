@@ -3,6 +3,8 @@
 * PHP for wechat (using OAuth2)
 *
 * @author High Sea <admin@highsea90.com>
+* 
+* 该页面 显示 二维码
 */
 session_start();
 include_once 'include/common.php';

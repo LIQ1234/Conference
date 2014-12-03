@@ -3,6 +3,8 @@
 * PHP for wechat (using OAuth2)
 *
 * @author High Sea <admin@highsea90.com>
+*
+* 该页面 包含 curlAPI newHeader debugPre userCache getUserCache backCode 等函数
 */
 
 /**
