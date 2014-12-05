@@ -1,0 +1,290 @@
+<?php
+session_start();
+include_once 'function.php';
+
+//增加管理员：
+$disPlay = 'none';
+$applydis = 'none';
+$adminname = '';
+
+if (isset($_POST['adminaction'])) {
+    $disPlay = 'block';
+    $adminaction = $_POST['adminaction'];
+    //账号属性
+    $adminname = $_POST['adminname'];
+    $admindate =  date("Y-m-d H:i:s",time());
+    //执行插入
+    $sql = "INSERT INTO `hs_admin` (`name`, `date`)";
+    $sql .= "VALUES ('".$adminname."', '".$admindate."')";
+
+    $row = sql_insert_update_delete($sql);
+}
+
+//保存表单设置
+if (isset($_POST['newapplyaction'])) {
+    $applydis = 'block';
+    $newapplyaction = $_POST['newapplyaction'];
+    //表格属性
+    $newapplyname = $_POST['newapplyname'];
+    $applydate =  date("Y-m-d H:i:s",time());
+    //前台表格属性：
+    $name           = $_POST['name'];
+    $sex            = $_POST['sex'];
+    $age            = $_POST['age'];
+    $qq             = $_POST['qq'];
+    $email          = $_POST['email'];
+    $site           = $_POST['site'];
+    $job            = $_POST['job'];
+    $info           = $_POST['info'];
+    $constellation  = $_POST['constellation'];
+    $bd_y           = $_POST['bd_y'];
+    $bd_m           = $_POST['bd_m'];
+    $bd_d           = $_POST['bd_d'];
+
+    //执行插入：
+    $applysql = "INSERT INTO `hs_setform` (`formname`, `name`, `sex`, `age`, `qq`, `email`, `site`, `job`, `info`, `constellation`, `bd_y`, `bd_m`, `bd_d`, `date`)";
+    $applysql .= "VALUES ('".$newapplyname."', '".$name."', '".$sex."', '".$age."', '".$qq."', '".$email."', '".$site."', '".$job."','".$info."', '".$constellation."', '".$bd_y."', '".$bd_m."', '".$bd_d."', '".$applydate."')";
+
+    $applyrow = sql_insert_update_delete($applysql);
+    //echo $applysql.'<br>';
+    //echo $applyrow."<br>";
+
+}
+
+?>
+
+<html>
+<head>
+<title>管理后台</title>
+<meta chaset="utf-8">
+<script src="https://a.alipayobjects.com/u/js/201204/2S07Fhc1TN.js"></script> 
+</head>
+<body>
+<h2>增加管理员</h2>
+<form id="addadmin" name="addadmin" method="post" action="admin.php" onSubmit="return checkadmin()">
+    <input name="adminaction" type="hidden" value="adminaction" />
+    <p>用户名：
+        <input type="text" name="adminname" value="">    
+        <input type="submit" name="button" id="button" value=" 提 交 " />
+        <em>注：一定要确保该管理员的微信号正确</em>
+    </p>
+    <p style="display:<?=$disPlay?>">已经增加管理员：<?=$adminname?>，操作时间：<?=$admindate?></p>
+</form>
+
+<h2>设置前台表单</h2>
+<form id="newapply" name="newapply" method="post" action="admin.php" onSubmit="return ajaxverify()">
+    <input name="newapplyaction" type='hidden' value="newapplyaction" />
+    <p>设置您的表单名称方便保存设置：取名
+        <input name="newapplyname" type='text' value="">
+        <em>名称仅限于中英文以及数字</em> 
+        <input type="submit" name="applybutton" id="applybutton" value="保存设置">
+    </p>
+    <p style="display:<?=$applydis?>">设置已经保存：<?=$newapplyname?>，操作时间：<?=$applydate?></p>
+    <ol>
+        <li>
+            <h4>用户名：</h4>
+            显示<input type="radio" name="name" value="1" checked>
+            不用<input type="radio" name="name" value="0" >
+            <p>举例：用户名<input type="text" value="张三(或者：Mike)"></p>
+        </li>
+        <li>
+            <h4>性别：</h4>
+            显示<input type="radio" name="sex" value="1" checked>
+            不用<input type="radio" name="sex" value="0" >
+            <p>举例：
+                您的性别：男<input type="radio" value="1" name="e_sex" checked>
+                女<input type="radio" name="e_sex" value="0"></p>
+        </li>
+        <li>
+            <h4>年龄：</h4>
+            显示<input type="radio" name="age" value="1" checked>
+            不用<input type="radio" name="age" value="0" >
+            <p>举例：您的年龄<input type="text" value="25">岁</p>
+        </li>
+        <li>
+            <h4>QQ号：</h4>
+            显示<input type="radio" name="qq" value="1" checked>
+            不用<input type="radio" name="qq" value="0" >
+            <p>举例：您的qq号<input type="text" value="644494365"></p>
+        </li>
+        <li>
+            <h4>邮箱：</h4>
+            显示<input type="radio" name="email" value="1" checked>
+            不用<input type="radio" name="email" value="0" >
+            <p>举例：您的邮箱<input type="text" value="admin@highsea90.com"></p>
+        </li>
+        <li>
+            <h4>座位：</h4>
+            显示<input type="radio" name="site" value="1" checked>
+            不用<input type="radio" name="site" value="0" >
+            <p>举例：您的年龄<input type="text" value="a101">号</p>
+        </li>
+        <li>
+            <h4>工作：</h4>
+            显示<input type="radio" name="job" value="1" checked>
+            不用<input type="radio" name="job" value="0" >
+            <p>举例：您的喜欢的工作<input type="text" value="WEB前端开发工程师"></p>
+        </li>
+        <li>
+            <h4>格言：</h4>
+            显示<input type="radio" name="info" value="1" checked>
+            不用<input type="radio" name="info" value="0" >
+            <p>举例：您的格言<input type="text" value="我是一只小前端"></p>
+        </li>
+        <li>
+            <h4>星座：</h4>
+            显示<input type="radio" name="constellation" value="1" checked>
+            不用<input type="radio" name="constellation" value="0" >
+            <p>举例：选择您的星座 
+                <select name="e_constellation">
+                    <option value="1">白羊座</option>
+                    <option value="2">金牛座</option>
+                    <option value="3">双子座</option>
+                    <option value="4">巨蟹座</option>
+                    <option value="5">狮子座</option>
+                    <option value="6">处女座</option>
+                    <option value="7">天秤座</option>
+                    <option value="8">天蝎座</option>
+                    <option value="9">射手座</option>
+                    <option value="10">摩羯座</option>
+                    <option value="11">水瓶座</option>
+                    <option value="12">双鱼座</option>
+                </select>
+            </p>
+        </li>
+        <li>
+            <h4>出生年：</h4>
+            显示<input type="radio" name="bd_y" value="1" checked>
+            不用<input type="radio" name="bd_y" value="0" >
+            <p>举例：您的出生年份<input type="text" value="1990">年</p>
+        </li>
+        <li>
+            <h4>出生月：</h4>
+            显示<input type="radio" name="bd_m" value="1" checked>
+            不用<input type="radio" name="bd_m" value="0" >
+            <p>举例：您的出生月份<input type="text" value="3">月</p>
+        </li>
+        <li>
+            <h4>出生日：</h4>
+            显示<input type="radio" name="bd_d" value="1" checked>
+            不用<input type="radio" name="bd_d" value="0" >
+            <p>举例：您的出生日子<input type="text" value="17">日</p>
+        </li>      
+    </ol>
+</form>
+
+    
+<h2>设置显示的表单</h2>
+<script type="text/javascript">
+var adminname = $('[name=adminname]');
+var newapplyname = $('[name=newapplyname]');
+
+function checkadmin(){
+    if (adminname.val()=='') {
+        alert('请填写管理员名称');
+        return false;
+    };
+
+}
+
+
+
+function ajaxverify(){
+
+if (newapplyname.val() == '') {
+    alert('请填写表单名称');
+    return false;
+}else{
+
+    console.log('ajax');
+
+    jQuery.ajax({
+        type  : "get",
+        async : true,
+        url : 'http://<?=$_SERVER["HTTP_HOST"]?>/weixinsdk/plate/preach/api.php',
+        dataType : "jsonp",
+        jsonp : "callback",
+        data : {
+            verify:"verify",
+            newapplyname:newapplyname.val()
+        },
+        jsonpCallback : "dataList",
+        success : function(dataList){
+            console.log(dataList);
+            if (dataList.code=='404') {
+                alert('可以');
+                $('#newapply').attr('data-verify','1');
+
+                return true;
+
+            }else if(dataList.code=='205'){
+                $('#newapply').attr('data-verify','0');
+                alert('已存在');
+                return false;
+
+            }else{
+                $('#newapply').attr('data-verify','2');
+                alert('错误，请刷新');
+                return false;
+
+            };
+
+        },
+        error : function(){
+            $('#newapply').attr('data-verify','3');
+            alert('网络故障请重试');
+            return false;
+        }
+        
+    });
+return false;
+}
+
+}
+
+function returnform(callback){
+    callback();
+
+    if ($('#newapply').data('verify')=='1') {
+        console.log($('#newapply').data('verify'));
+        return true;
+    }else{
+        console.log('returnform false')
+        return false;
+    };
+}
+
+
+
+//判断脚本加载完成
+function include_js(file) {
+    var _doc = document.getElementsByTagName('head')[0];
+    var js = document.createElement('script');
+    js.setAttribute('type', 'text/javascript');
+    js.setAttribute('src', file);
+    _doc.appendChild(js);
+
+    if (!/*@cc_on!@*/0) { //if not IE
+        //Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload
+        js.onload = function () {
+            alert('Firefox2、Firefox3、Safari3.1+、Opera9.6+ support js.onload');
+        }
+    } else {
+        //IE6、IE7 support js.onreadystatechange
+        js.onreadystatechange = function () {
+            if (js.readyState == 'loaded' || js.readyState == 'complete') {
+                alert('IE6、IE7 support js.onreadystatechange');
+            }
+        }
+    }
+
+    return false;
+}
+
+//execution function
+//include_js('http://a.com/jquery.js');
+
+</script>
+
+</body>
+</html>

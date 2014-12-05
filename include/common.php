@@ -113,13 +113,32 @@ function backCode($code){
             break;
     }
 }
+/**
+* @param customJsonRes 
+* @param $code back参数
+*/
+//自定义生成 json 数据
+function customJsonRes($code, $message, $customJson){
+
+    $callback = isset($_GET['callback']) ? $_GET['callback'] : 'callback'; 
+
+    $resultCacheDataJson = array(
+        'code' => $code,
+        'message' => $message,
+        'data' => $customJson
+    );
+
+    echo $callback.'('.json_encode($resultCacheDataJson).')';
+    exit;
+
+}
+
 
 //尝试加密
-function getAwardCheckCode() {
+function getAwardCheckCode($key) {
     $time = time();
-    $key = "12345";
-    $secret = md5($time.$key);
-    return "&time=".$time."&secret=".$secret;
+    $secret = md5($key);
+    return $secret;
 }
 
 function get_password( $length = 8 ){
@@ -127,4 +146,65 @@ function get_password( $length = 8 ){
     return $str;
 }
 
+/*$con = mysql_connect("hdm-116.hichina.com","hdm1160443","mining20140310");
+
+if (!$con){
+    die('Could not connect: ' . mysql_error());
+}
+
+mysql_select_db("hdm1160443_db", $con);
+
+$result = mysql_query($sqlApplyName, $con);
+
+while($row = mysql_fetch_array($result)){
+    echo "<pre>";
+  var_dump($row);
+}*/
+
+/*$serverArry = {
+    '100':'继续',
+    '101':'交换协议',
+    '200':'正常', success 正常
+    '201':'创建',
+    '202':'接受',
+    '203':'非授权信息', 参数不存在
+    '204':'没有内容',
+    '205':'重置内容',
+    '206':'部分内容',
+    '300':'多选',
+    '301':'永久移动',
+    '302':'发现缓存', cache 缓存
+    '303':'请参阅其他',
+    '304':'未修改', 
+    '305':'使用代理',
+    '306':'未使用',
+    '307':'临时重定向',
+    '400':'错误的请求',Bad Request：请求参数不合法！
+    '401':'需要认证',
+    '402':'需要付款',
+    '403':'禁止访问',
+    '404':'找不到资源', not found：没找到数据！
+    '405':'不允许的方法',
+    '406':'不接受',
+    '407':'需要代理身份验证',
+    '408':'请求超时',
+    '409':'冲突',
+    '410':'过去的',
+    '411':'需要长度',
+    '412':'前提条件失败',
+    '413':'请求实体太大',
+    '414':'请求URI太长',
+    '415':'不支持的媒体类型',
+    '416':'请求的范围无法满足',
+    '417':'预期失败',
+    '500':'内部服务器错误',
+    '501':'未实现',
+    '502':'错误的网络', Bad Gateway：服务器连接失败！
+    '503':'暂停服务',
+    '504':'网络超时',
+    '505':'HTTP的版本没有支持'
+}*/
+
+
 ?>
+
