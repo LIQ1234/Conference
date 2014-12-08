@@ -134,6 +134,33 @@ function customJsonRes($code, $message, $customJson){
 }
 
 
+function unescape($escstr){
+    preg_match_all("/%u[0-9A-Za-z]{4}|%.{2}|[0-9a-zA-Z.+-_]+/", $escstr, $matches);
+    $ar = &$matches[0];
+    $c = "";
+    foreach($ar as $val){
+        if (substr($val, 0, 1) != "%"){
+            $c .= $val;
+        } elseif (substr($val, 1, 1) != "u"){
+            $x = hexdec(substr($val, 1, 2));
+            $c .= chr($x);
+        }else{
+            $val = intval(substr($val, 2), 16);
+            if ($val < 0x7F) {
+                $c .= chr($val);
+            } elseif ($val < 0x800){
+                $c .= chr(0xC0 | ($val / 64));
+                $c .= chr(0x80 | ($val % 64));
+            }else {
+                $c .= chr(0xE0 | (($val / 64) / 64));
+                $c .= chr(0x80 | (($val / 64) % 64));
+                $c .= chr(0x80 | ($val % 64));
+            }
+        }
+    }
+    return $c;
+} 
+
 //尝试加密
 function getAwardCheckCode($key) {
     $time = time();
@@ -145,6 +172,7 @@ function get_password( $length = 8 ){
     $str = substr(md5(time()), 0, 6);
     return $str;
 }
+
 
 /*$con = mysql_connect("hdm-116.hichina.com","hdm1160443","mining20140310");
 

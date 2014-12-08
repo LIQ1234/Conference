@@ -1,8 +1,15 @@
 <?php
-session_start();
+
+//调试
+/*session_start();
 include_once 'function.php';
 include_once '../../include/common.php';
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+?>
+<script src="http://<?=$_SERVER["HTTP_HOST"]?>/weixinsdk/plate/cssjs/jq1.7.1/jquery-1.7.1.min.js"></script> 
+<?php*/
+//调试结束
+
 
 //增加管理员：
 $disPlay = 'none';
@@ -74,19 +81,15 @@ $_SESSION['showForm'] = 'highsea';
 
 ?>
 
-<html>
-<head>
-<title>管理后台</title>
-<meta chaset="utf-8">
-<script src="https://a.alipayobjects.com/u/js/201204/2S07Fhc1TN.js"></script>
+
+
 <style type="text/css">
 .none{display: none;}
 .block{display: block;}
 </style> 
-</head>
-<body>
+
 <h2>增加管理员</h2>
-<form id="addadmin" name="addadmin" method="post" action="admin.php" onSubmit="return checkadmin()">
+<form id="addadmin" name="addadmin" method="post" action="" onSubmit="return checkadmin()">
     <input name="adminaction" type="hidden" value="adminaction" />
     <p>用户名：
         <input type="text" name="adminname" value="">    
@@ -135,17 +138,19 @@ $_SESSION['showForm'] = 'highsea';
 
 </form>
 <hr>
-<h4>当前设置的表单</h4>
-<p class="nowForm"></p>
+<h4>当前设置的表单：<i class="nowForm"></i></h4>
+
 <span>更改当前设置的表单请到 已有的表单中选择一个 表单即可</span>
+<hr>
+
+<h4>标题</h4>
+
+<textarea rows="3" cols="20" class="title"></textarea>
 <hr>
 <h4>简介设置</h4>
 
 <textarea rows="3" cols="20" class="showtext"></textarea>
-<hr>
-<h4>标题</h4>
 
-<textarea rows="3" cols="20" class="title"></textarea>
 <hr>
 <h4>详细介绍</h4>
 
@@ -157,7 +162,7 @@ $_SESSION['showForm'] = 'highsea';
 <span class="resultSetShowAll"></span>
 
 <h2>创建或者更新已有表单</h2>
-<form id="newapply" name="newapply" method="post" action="admin.php" onSubmit="return checkapply()">
+<form id="newapply" name="newapply" method="post" action="" onSubmit="return checkapply()">
     <input name="newapplyaction" type='hidden' value="newapplyaction" />
     
     <ol>
@@ -194,10 +199,10 @@ $_SESSION['showForm'] = 'highsea';
             <p>举例：您的邮箱<input type="text" value="admin@highsea90.com"></p>
         </li>
         <li>
-            <h4>座位：</h4>
+            <h4>班级或者社团职务(座位)：</h4>
             显示<input type="radio" name="site" value="1" checked>
             不用<input type="radio" name="site" value="0" >
-            <p>举例：您的年龄<input type="text" value="a101">号</p>
+            <p>举例：班级或者社团职务(座位)<input type="text" value="a101">号</p>
         </li>
         <li>
             <h4>工作：</h4>
@@ -261,9 +266,18 @@ $_SESSION['showForm'] = 'highsea';
     <p style="display:<?=$applydis_c?>">你更新了 <?=$newapplyname?> 表单，设置已经覆盖，操作时间：<?=$applydate?></p>
 </form>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-
-
+<script src="http://<?=$_SERVER["HTTP_HOST"]?>/weixinsdk/plate/preach/cssjs/common.js"></script>
 <script type="text/javascript">
 var adminname = $('[name=adminname]'),
     newapplyname = $('[name=newapplyname]'),
@@ -299,10 +313,11 @@ function checkapply(){
     };
 
 }
-//获取 简介设置，标题，详细介绍
+//获取 简介设置，标题，详细介绍  getshow
+//ajax2();
 
 
-//获取 数据库中 所有设置的表单状况
+//获取 数据库中 所有设置的表单状况 allform
 jQuery.ajax({
     type  : "get",
     async : true,
@@ -314,7 +329,7 @@ jQuery.ajax({
     },
     jsonpCallback : "dataList",
     success : function(dataList){
-        console.log(dataList);
+        //console.log(dataList);
         if (dataList.code==200) {
             var a =dataList.data;
             allformshow.html('');
@@ -344,11 +359,12 @@ jQuery.ajax({
             $('.showcurrent').find('#tr'+allformshow.val()).toggleClass('none');
 
             currentTR();
+            ajax2();
         };
             
     },
     error : function(){
-        alert('网络故障请刷新，或重试');
+        console.log('allform,网络故障请刷新，或重试');
     }
     
 });
@@ -364,7 +380,7 @@ function currentTR(){
     })
 }
 
-
+//设置设置前台显示的表单、简介，标题，详细介绍等 show
 setShowAll.on('click',function(){
     jQuery.ajax({
         type  : "get",
@@ -374,10 +390,10 @@ setShowAll.on('click',function(){
         jsonp : "callback",
         data : {
             verify:"show",
-            showform:escape($('.option'+allformshow.val()).text()),
-            showtext:showtext.val(),
-            title:title.val(),
-            intro:intro.val(),
+            showform:encodeURIComponent($('.option'+allformshow.val()).text()),
+            showtext:encodeURIComponent(showtext.val()),
+            title:encodeURIComponent(title.val()),
+            intro:encodeURIComponent(intro.val()),
             date:'<?=date("Y-m-d H:i:s",time())?>',
             md5:'<?=getAwardCheckCode("sjk2014")?>'
         },
@@ -385,6 +401,7 @@ setShowAll.on('click',function(){
         success : function(dataList){
             if (dataList.code=='200') {
                 $('.resultSetShowAll').html('更新成功啦！');
+                ajaxGetshow();
             }else if(dataList.code == '401'){
                 $('.resultSetShowAll').html('认证失败');
             }else{
@@ -393,13 +410,10 @@ setShowAll.on('click',function(){
                 
         },
         error : function(){
-            alert('网络故障请刷新，或重试');
+            console.log('show,网络故障请刷新，或重试');
         }
     
     });
 })
 
 </script>
-
-</body>
-</html>

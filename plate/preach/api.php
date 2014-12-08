@@ -51,7 +51,14 @@ class Form{
     public $bd_d;
     public $date;
 }
-
+class Content{
+    public $id ;
+    public $showform ;
+    public $showtext ;
+    public $title ;
+    public $intro ;
+    public $date ;
+}
 
 //
 
@@ -60,12 +67,12 @@ if (!isset($_GET['verify'])) {
 }
 
 $variable = $_GET['verify'];
-//验证表单名称，管理员名称，前台展示内容等
 switch ($variable) {
+//验证表单名称，管理员名称，前台展示内容等（未完成）
     case 'verify':
         customJsonRes('200', 'success', 'null');
         break;
-
+//获取所有表单状态
     case 'allform':
         $allformSql = "SELECT * FROM `hs_setform`";
         $resultall = sql_select($allformSql);
@@ -97,7 +104,7 @@ switch ($variable) {
         customJsonRes('200', 'success', $data);
         
         break;
-    //设置 前台表单，文字等展示信息
+//设置 前台表单，文字等展示信息
     case 'show':
 
         if (!isset($_GET['showform'])||!isset($_GET['showtext'])||!isset($_GET['title'])||!isset($_GET['intro'])||!isset($_GET['date'])||!isset($_GET['md5'])) {
@@ -115,26 +122,43 @@ switch ($variable) {
         if ($_GET['md5']==md5('sjk2014')) {
 
             //执行更新
-            $updatecontent = "UPDATE hs_content SET showform = '".$showform."', showtext = '".$showtext."', title = '".$title."', intro = '".$intro."', date = '".$date."' WHERE id = '1' ";
+            $updatecontent = "UPDATE hs_content SET showform = '".$showform."', showtext = '".$showtext."', title = '".$title."', intro = '".$intro."', date = '".$date."' WHERE id = '0' ";
             sql_insert_update_delete($updatecontent);
 
             customJsonRes('200', 'success', 'null');
 
         } else{
-            customJsonRes('401', '需要认证', md5('sjk2014'));
+            customJsonRes('401', '需要认证', 'null');
         }
 
 
         break;
-
+//获取 设置的前台表单名称，文字等展示信息
     case 'getshow':
-            $sqlApplyName = "SELECT * FROM `hs_content` WHERE id = '1' ";
+            $sqlApplyName = "SELECT * FROM `hs_content`";
             $resultApplyName = sql_select($sqlApplyName);
-            var_dump($resultApplyName);
-            //customJsonRes('200', 'success', $resultApplyName);
+
+        foreach ($resultApplyName as $i => $row){
+
+            $show = new Content();
+            $show->id            = $row[0];
+            $show->showform      = $row[1];
+            $show->showtext      = $row[2];
+            $show->title         = $row[3];
+            $show->intro         = $row[4];
+            $show->date          = $row[5];
+            $data[]=$show;
+        }
+            //var_dump($resultApplyName);
+            customJsonRes('200', 'success', $data);
 
         break;
+//获取 设置的前台表单的内容-根据名称来获取
 
+    case 'getcurrentform':
+        $getcurrentformSQL = "SELECT * FROM `hs_setform` WHERE formname = '".$_GET['formname']."' ";
+        # code...
+        break;
     default:
         customJsonRes('204', '没有内容！', 'null');
         break;
