@@ -35,7 +35,7 @@ if (isset($_POST['newapplyaction'])) {
     
     $newapplyaction = $_POST['newapplyaction'];
     //表格属性
-    $newapplyname = $_POST['newapplyname'];
+    $newapplyname = iconv('UTF-8', 'GBK', $_POST['newapplyname']);
     $applydate =  date("Y-m-d H:i:s",time());
     //前台表格属性：
     $name           = $_POST['name'];
@@ -262,8 +262,8 @@ $_SESSION['showForm'] = 'highsea';
         <em>名称仅限于中英文以及数字</em> 
         <input type="submit" name="applybutton" id="applybutton" value="保存设置">
     </p>
-    <p style="display:<?=$applydis?>">你新建了 <?=$newapplyname?> 表单，设置已经保存，操作时间：<?=$applydate?></p>
-    <p style="display:<?=$applydis_c?>">你更新了 <?=$newapplyname?> 表单，设置已经覆盖，操作时间：<?=$applydate?></p>
+    <p style="display:<?=$applydis?>">你新建了 <?=iconv("GBK", 'UTF-8', $newapplyname)?> 表单，设置已经保存，操作时间：<?=$applydate?></p>
+    <p style="display:<?=$applydis_c?>">你更新了 <?=iconv("GBK", 'UTF-8', $newapplyname)?> 表单，设置已经覆盖，操作时间：<?=$applydate?></p>
 </form>
 
 <br>
@@ -359,7 +359,7 @@ jQuery.ajax({
             $('.showcurrent').find('#tr'+allformshow.val()).toggleClass('none');
 
             currentTR();
-            ajax2();
+            ajaxGetshow();
         };
             
     },
@@ -381,6 +381,9 @@ function currentTR(){
 }
 
 //设置设置前台显示的表单、简介，标题，详细介绍等 show
+//参数 showform 将表格 名称 改成表格 id ？
+//$('.option'+allformshow.val()).text()
+//$('.option'+allformshow.val()).attr('value')
 setShowAll.on('click',function(){
     jQuery.ajax({
         type  : "get",
@@ -390,10 +393,10 @@ setShowAll.on('click',function(){
         jsonp : "callback",
         data : {
             verify:"show",
-            showform:encodeURIComponent($('.option'+allformshow.val()).text()),
-            showtext:encodeURIComponent(showtext.val()),
-            title:encodeURIComponent(title.val()),
-            intro:encodeURIComponent(intro.val()),
+            showform:escape($('.option'+allformshow.val()).text()),
+            showtext:escape(showtext.val()),
+            title:escape(title.val()),
+            intro:escape(intro.val()),
             date:'<?=date("Y-m-d H:i:s",time())?>',
             md5:'<?=getAwardCheckCode("sjk2014")?>'
         },

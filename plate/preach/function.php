@@ -21,7 +21,7 @@ function sql_insert_update_delete($query)
 
             die('Error: ' . mysql_error());
         }
-        return "added";
+        return "add success";
 
         mysql_close($conn);
 }
@@ -46,16 +46,18 @@ function sql_select($query){
         die('null');
     }
     @mysql_data_seek($result,0);
-    while($row = @mysql_fetch_array($result))
-    {
-            $output[] = $row;
+    while($row = @mysql_fetch_array($result)){
+        $output[] = $row;
     }
-
+/*    if(!is_array(@$output)){
+        $output=array();
+    } */
     @mysql_free_result($result);
     @mysql_close($conn);
 
     return $output;
 }
+
 
 
 //sql查询C(用于insert 且自动产生编号)

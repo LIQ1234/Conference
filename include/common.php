@@ -174,6 +174,35 @@ function get_password( $length = 8 ){
 }
 
 
+
+/**
+
+*/
+function formField ($resultall){
+    foreach ($resultall as $i => $row){
+
+        $form = new Form();
+        $form->id            = $row[0];
+        $form->formname      = $row[1];
+        $form->name          = $row[2];
+        $form->sex           = $row[3];
+        $form->age           = $row[4];
+        $form->qq            = $row[5] ;
+        $form->email         = $row[6];
+        $form->site          = $row[7];
+        $form->job           = $row[8];
+        $form->info          = $row[9];
+        $form->constellation = $row[10];
+        $form->bd_y          = $row[11];
+        $form->bd_m          = $row[12];
+        $form->bd_d          = $row[13];
+        $form->date          = $row[14];
+
+        $data[]=$form;
+    }
+    return $data;
+}
+
 /*$con = mysql_connect("hdm-116.hichina.com","hdm1160443","mining20140310");
 
 if (!$con){

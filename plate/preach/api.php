@@ -34,6 +34,7 @@ if (isset($resultApplyName)) {
 */
 //form calss
 
+//获取所有表单状态
 class Form{
     public $id ;
     public $formname ;
@@ -51,6 +52,7 @@ class Form{
     public $bd_d;
     public $date;
 }
+//获取 设置的前台表单名称，文字等展示信息
 class Content{
     public $id ;
     public $showform ;
@@ -59,7 +61,23 @@ class Content{
     public $intro ;
     public $date ;
 }
-
+//获取 设置的前台表单的内容-根据名称来获取
+/*class Currentform{
+    public $id ;
+    public $name ;
+    public $sex ;
+    public $age ;
+    public $qq ;
+    public $email ;
+    public $site;
+    public $job;
+    public $info;
+    public $constellation;
+    public $bd_y;
+    public $bd_m;
+    public $bd_d;
+    public $date;
+}*/
 //
 
 if (!isset($_GET['verify'])) {
@@ -78,28 +96,8 @@ switch ($variable) {
         $resultall = sql_select($allformSql);
 
         //debugPre($resultall,0);
-
-        foreach ($resultall as $i => $row){
-
-            $form = new Form();
-            $form->id            = $row[0];
-            $form->formname      = $row[1];
-            $form->name          = $row[2];
-            $form->sex           = $row[3];
-            $form->age           = $row[4];
-            $form->qq            = $row[5] ;
-            $form->email         = $row[6];
-            $form->site          = $row[7];
-            $form->job           = $row[8];
-            $form->info          = $row[9];
-            $form->constellation = $row[10];
-            $form->bd_y          = $row[11];
-            $form->bd_m          = $row[12];
-            $form->bd_d          = $row[13];
-            $form->date          = $row[14];
-
-            $data[]=$form;
-        }
+        //填写字段
+        $data = formField ($resultall);
 
         customJsonRes('200', 'success', $data);
         
@@ -112,19 +110,21 @@ switch ($variable) {
         }
 
 
-        $showform = $_GET['showform'];
-        $showtext = $_GET['showtext'];
-        $title = $_GET['title'];
-        $intro = $_GET['intro'];
+        $showform = iconv('UTF-8', 'GBK', unescape($_GET['showform']));
+
+        $showtext = iconv('UTF-8', 'GBK', unescape($_GET['showtext']));
+        $title = iconv('UTF-8', 'GBK', unescape($_GET['title']));
+        $intro = iconv('UTF-8', 'GBK', unescape($_GET['intro']));
         $date = $_GET['date'];
         $md5 = $_GET['md5'];
 
         if ($_GET['md5']==md5('sjk2014')) {
 
             //执行更新
+            //若 表格名称改成 表格id ……
             $updatecontent = "UPDATE hs_content SET showform = '".$showform."', showtext = '".$showtext."', title = '".$title."', intro = '".$intro."', date = '".$date."' WHERE id = '0' ";
             sql_insert_update_delete($updatecontent);
-
+            //echo $updatecontent;
             customJsonRes('200', 'success', 'null');
 
         } else{
@@ -156,8 +156,25 @@ switch ($variable) {
 //获取 设置的前台表单的内容-根据名称来获取
 
     case 'getcurrentform':
-        $getcurrentformSQL = "SELECT * FROM `hs_setform` WHERE formname = '".$_GET['formname']."' ";
-        # code...
+        
+        if (isset($_GET['formname'])) {
+            //自定义的 unescape 见 common.php
+            $_GET_formname = unescape($_GET['formname']);
+            //iconv('UTF-8', 'GBK', unescape($_GET['formname']))
+            //iconv('GBK', 'UTF-8', )
+
+            $getcurrentformSQL = "SELECT * FROM `hs_setform` WHERE formname = '".$_GET_formname."' ";
+            //echo $getcurrentformSQL;
+            $resultCurr = sql_select($getcurrentformSQL);
+            //var_dump($data);
+            //填写字段
+            $data = formField ($resultCurr);
+            customJsonRes('200', 'success', $data);
+
+        } else {
+            customJsonRes('203', '非授权信息！', 'null');
+        }
+        
         break;
     default:
         customJsonRes('204', '没有内容！', 'null');

@@ -13,19 +13,27 @@ function ajaxGetshow(callback){
             if (dataList.code=='200') {
                 var a = dataList.data;
                 //console.log(a[0]);
-                $('.nowForm').html('《'+decodeURIComponent(a[0].showform)+'》');
-                var _a = decodeURIComponent(a[0].showtext),
-                    _b = decodeURIComponent(a[0].title),
-                    _c = decodeURIComponent(a[0].intro);
+                
+                var _a = unescape(a[0].showtext),
+                    _b = unescape(a[0].title),
+                    _c = unescape(a[0].intro),
+                    _d = unescape(a[0].showform);
                 showtext.val(_a);
                 title.val(_b);
                 intro.val(_c);
+                $('.nowForm').html(_d);
 
                 showtext.html(_a);
                 title.html(_b);
                 intro.html(_c);
 
-                callback();
+                
+                if (typeof(callback)=='undefined') {
+                    console.log('ajaxGetshow : no callback');
+                }else{
+                    callback();
+                };
+                //
 
             }else if(dataList.code == '401'){
                 
