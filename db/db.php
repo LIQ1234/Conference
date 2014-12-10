@@ -4,10 +4,10 @@ class Db {
 	static private $_instance;
 	static private $_connectSource;
 	private $_dbConfig = array(
-		'host' => 'hdm-144.hichina.com',
-		'user' => 'hdm1440387',
-		'password' => 'wechat083',
-		'database' => 'hdm1440387_db',
+		'host' => '',
+		'user' => '',
+		'password' => '',
+		'database' => '',
 	);
 
 	private function __construct() {

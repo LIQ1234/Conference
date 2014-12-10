@@ -76,8 +76,7 @@ if (isset($_POST['newapplyaction'])) {
 
 
 }
-//设置 前台表单
-$_SESSION['showForm'] = 'highsea';
+
 
 ?>
 

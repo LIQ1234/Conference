@@ -1,9 +1,9 @@
 <?php
 //账号与密码设定
-$host = 'hdm-116.hichina.com';
-$user = 'hdm1160443';
-$pass = 'mining20140310';
-$database = 'hdm1160443_db';
+$host = 'localhost';
+$user = 'root';
+$pass = 'root083';
+$database = 'hs_weixin';
 
 //mysql_db_query() 新版换成 mysql_query()
 //sql查询A(用于insert update delete)
@@ -13,7 +13,7 @@ function sql_insert_update_delete($query)
 
         $conn = @mysql_connect($host,$user,$pass);
         if (!$conn){
-                die('链接数据库失败: ' . mysql_error());
+                die('亲，链接数据库失败: ' . mysql_error());
         }
         @mysql_select_db($database,$conn);
 
@@ -36,7 +36,7 @@ function sql_select($query){
 
     $conn = @mysql_connect($host,$user,$pass);
     if (!$conn){
-            die('链接数据库失败: ' . mysql_error());
+            die('亲！ 链接数据库失败: ' . mysql_error());
     }
     @mysql_query("set names utf8"); 
     @mysql_select_db($database,$conn);

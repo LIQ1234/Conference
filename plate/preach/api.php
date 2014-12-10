@@ -176,6 +176,33 @@ switch ($variable) {
         }
         
         break;
+
+    case 'adduserform':
+        
+        $applydate =  date("Y-m-d H:i:s",time());
+        //前台表格属性：
+        $name           = iconv('UTF-8', 'GBK', unescape($_GET['name']));
+        $sex            = $_GET['sex'];
+        $age            = $_GET['age'];
+        $qq             = $_GET['qq'];
+        $email          = $_GET['email'];
+        $site           = $_GET['site'];
+        $job            = $_GET['job'];
+        $info           = $_GET['info'];
+        $constellation  = $_GET['constellation'];
+        $bd_y           = $_GET['bd_y'];
+        $bd_m           = $_GET['bd_m'];
+        $bd_d           = $_GET['bd_d'];
+
+        $adduserformsql = "INSERT INTO `hs_userform` (`name`, `sex`, `age`, `qq`, `email`, `site`, `job`, `info`, `constellation`, `bd_y`, `bd_m`, `bd_d`, `date`)";
+        $adduserformsql .= "VALUES ('".$name."', '".$sex."', '".$age."', '".$qq."', '".$email."', '".$site."', '".$job."','".$info."', '".$constellation."', '".$bd_y."', '".$bd_m."', '".$bd_d."', '".$applydate."')";
+
+        $resultUserForm = sql_insert_update_delete($adduserformsql);
+        customJsonRes('200', $adduserformsql, $resultUserForm);
+
+
+        break;
+
     default:
         customJsonRes('204', '没有内容！', 'null');
         break;
